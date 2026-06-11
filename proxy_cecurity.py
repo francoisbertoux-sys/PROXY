@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Proxy CORS — API Cecurity CFEC
-Relaie les appels navigateur vers Cecurity en gérant CORS et sessions. V3
+Relaie les appels navigateur vers Cecurity en gérant CORS et sessions. v4
 """
 
 import os
@@ -90,12 +90,7 @@ def proxy(path):
             method  = request.method,
             url     = url,
             params  = params,
-            headers = {
-                'Content-Type':  'application/json',
-                'Accept':        'application/json',
-                **({'Authorization': request.headers['Authorization']}
-                   if 'Authorization' in request.headers else {}),
-            },
+            headers = {'Content-Type': 'application/json', 'Accept': 'application/json'},
             data    = request.get_data(),
             timeout = 30,
         )
