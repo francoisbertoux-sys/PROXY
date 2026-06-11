@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Proxy CORS — API Cecurity CFEC
-Relaie les appels navigateur vers Cecurity en gérant CORS et sessions. v4
+Relaie les appels navigateur vers Cecurity en gérant CORS et sessions. V5
 """
 
 import os
@@ -59,10 +59,18 @@ def add_cors(resp):
             resp.headers[k] = v
     return resp
 
-# ── Health check ──────────────────────────────────────────────────────────────
+# ── Health check + debug ─────────────────────────────────────────────────────
 @app.route('/ping')
 def ping():
     return jsonify({'status': 'ok', 'sessions': len(_store)})
+
+@app.route('/debug/<sid>')
+def debug_session(sid):
+    with _lock:
+        if sid not in _store:
+            return jsonify({'error': 'session not found'}), 404
+        cookies = dict(_store[sid]['session'].cookies)
+        return jsonify({'sid': sid, 'cookies': cookies})
 
 # ── Preflight OPTIONS ─────────────────────────────────────────────────────────
 @app.route('/proxy/', defaults={'path': ''}, methods=['OPTIONS'])
