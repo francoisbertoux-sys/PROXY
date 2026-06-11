@@ -90,7 +90,12 @@ def proxy(path):
             method  = request.method,
             url     = url,
             params  = params,
-            headers = {'Content-Type': 'application/json', 'Accept': 'application/json'},
+            headers = {
+                'Content-Type':  'application/json',
+                'Accept':        'application/json',
+                **({'Authorization': request.headers['Authorization']}
+                   if 'Authorization' in request.headers else {}),
+            },
             data    = request.get_data(),
             timeout = 30,
         )
