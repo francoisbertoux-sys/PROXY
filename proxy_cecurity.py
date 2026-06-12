@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Proxy CORS — API Cecurity CFEC
-Relaie les appels navigateur vers Cecurity en gérant CORS et sessions. V7
+Relaie les appels navigateur vers Cecurity en gérant CORS et sessions. V8
 """
 
 import os
@@ -43,7 +43,7 @@ def get_cors_headers(origin):
     return {
         'Access-Control-Allow-Origin':      origin,
         'Access-Control-Allow-Credentials': 'true',
-        'Access-Control-Allow-Methods':     'GET, POST, OPTIONS',
+        'Access-Control-Allow-Methods':     'GET, POST, DELETE, PATCH, PUT, OPTIONS',
         'Access-Control-Allow-Headers':     'Content-Type, Accept, X-SIV-Session, Authorization',
         'Access-Control-Expose-Headers':    'X-SIV-Session',
     }
@@ -84,8 +84,8 @@ def preflight(path):
     return resp
 
 # ── Proxy principal ───────────────────────────────────────────────────────────
-@app.route('/proxy/', defaults={'path': ''}, methods=['GET', 'POST'])
-@app.route('/proxy/<path:path>', methods=['GET', 'POST'])
+@app.route('/proxy/', defaults={'path': ''}, methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
+@app.route('/proxy/<path:path>', methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 def proxy(path):
     purge_old_sessions()
     sid, sess = get_or_create_session(request.headers.get('X-SIV-Session', ''))
